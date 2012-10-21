@@ -40,7 +40,7 @@ class Befunge93Board:
         }
 
 
-    def __init__(self, width, height, debug=False, debug_delay=-1):
+    def __init__(self, width, height, debug=False, debug_delay=-1, seed=None):
         self.pointer = Pointer()
         self._list = []
         # Fill board with whitespace
@@ -52,6 +52,8 @@ class Befunge93Board:
         self.debug = debug
         self.debug_delay = debug_delay
         self.debugstream = StringIO()
+
+        self.prng = random.Random(seed)
     
     def get(self, x, y):
         # Return space if out of bounds
@@ -80,7 +82,7 @@ class Befunge93Board:
         elif c in self.DIRCHAR_TO_DELTAS:
             (self.pointer.dx, self.pointer.dy) = self.DIRCHAR_TO_DELTAS[c]
         elif c == '?':
-            (self.pointer.dx, self.pointer.dy) = random.choice(self.DIRCHAR_TO_DELTAS.values())
+            (self.pointer.dx, self.pointer.dy) = self.prng.choice(self.DIRCHAR_TO_DELTAS.values())
         elif c == '+':
             self.pointer.stack.push(self.pointer.stack.pop() + self.pointer.stack.pop())
         elif c == '*':
@@ -239,7 +241,7 @@ class ConcurrentBefunge93Board(Befunge93Board):
             elif c in self.DIRCHAR_TO_DELTAS:
                 (self.pointer.dx, self.pointer.dy) = self.DIRCHAR_TO_DELTAS[c]
             elif c == '?':
-                (self.pointer.dx, self.pointer.dy) = random.choice(self.DIRCHAR_TO_DELTAS.values())
+                (self.pointer.dx, self.pointer.dy) = self.prng.choice(self.DIRCHAR_TO_DELTAS.values())
             elif c == '+':
                 pointer.stack.push(pointer.stack.pop() + pointer.stack.pop())
             elif c == '*':
