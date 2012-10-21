@@ -31,6 +31,15 @@ from funge import Pointer
 
 class Befunge93Board:
     """A Befunge-93 board"""
+
+    DIRCHAR_TO_DELTAS = {
+        '>': (1, 0),
+        '<': (-1, 0),
+        '^': (0, -1),
+        'v': (0, 1),
+        }
+
+
     def __init__(self, width, height, debug=False, debug_delay=-1):
         self.pointer = Pointer()
         self._list = []
@@ -68,32 +77,10 @@ class Befunge93Board:
             self.pointer.stack.push(ord(c))
         elif c in "0123456789":
             self.pointer.stack.push(int(c))
-        elif c == '>':
-            self.pointer.dx = 1
-            self.pointer.dy = 0
-        elif c == '<':
-            self.pointer.dx = -1
-            self.pointer.dy = 0
-        elif c == '^':
-            self.pointer.dx = 0
-            self.pointer.dy = -1
-        elif c == 'v':
-            self.pointer.dx = 0
-            self.pointer.dy = 1
+        elif c in self.DIRCHAR_TO_DELTAS:
+            (self.pointer.dx, self.pointer.dy) = self.DIRCHAR_TO_DELTAS[c]
         elif c == '?':
-            dir = ['>', 'v', '<', '^'][random.randint(0, 3)]
-            if dir == '>':
-                self.pointer.dx = 1
-                self.pointer.dy = 0
-            elif dir == '<':
-                self.pointer.dx = -1
-                self.pointer.dy = 0
-            elif dir == '^':
-                self.pointer.dx = 0
-                self.pointer.dy = -1
-            elif dir == 'v':
-                self.pointer.dx = 0
-                self.pointer.dy = 1
+            (self.pointer.dx, self.pointer.dy) = random.choice(self.DIRCHAR_TO_DELTAS.values())
         elif c == '+':
             self.pointer.stack.push(self.pointer.stack.pop() + self.pointer.stack.pop())
         elif c == '*':
@@ -249,32 +236,10 @@ class ConcurrentBefunge93Board(Befunge93Board):
                 pointer.stack.push(ord(c))
             elif c in "0123456789":
                 pointer.stack.push(int(c))
-            elif c == '>':
-                pointer.dx = 1
-                pointer.dy = 0
-            elif c == '<':
-                pointer.dx = -1
-                pointer.dy = 0
-            elif c == '^':
-                pointer.dx = 0
-                pointer.dy = -1
-            elif c == 'v':
-                pointer.dx = 0
-                pointer.dy = 1
+            elif c in self.DIRCHAR_TO_DELTAS:
+                (self.pointer.dx, self.pointer.dy) = self.DIRCHAR_TO_DELTAS[c]
             elif c == '?':
-                dir = ['>', 'v', '<', '^'][random.randint(0, 3)]
-                if dir == '>':
-                    pointer.dx = 1
-                    pointer.dy = 0
-                elif dir == '<':
-                    pointer.dx = -1
-                    pointer.dy = 0
-                elif dir == '^':
-                    pointer.dx = 0
-                    pointer.dy = -1
-                elif dir == 'v':
-                    pointer.dx = 0
-                    pointer.dy = 1
+                (self.pointer.dx, self.pointer.dy) = random.choice(self.DIRCHAR_TO_DELTAS.values())
             elif c == '+':
                 pointer.stack.push(pointer.stack.pop() + pointer.stack.pop())
             elif c == '*':
