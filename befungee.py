@@ -41,6 +41,7 @@ def main():
     parser.add_option("-x", "--x", dest="x", action="store", type="int", default=0, help="Initial X coordinate")
     parser.add_option("-y", "--y", dest="y", action="store", type="int", default=0, help="Initial Y coordinate")
     parser.add_option("--version", dest="version", action="store_true", default=False, help="Show version information and exit")
+    parser.add_option("--seed", dest="seed", type="int", default=None, help="Use SEED as the prng seed for deterministic random direction selection")
     (options, args) = parser.parse_args()
     
     if options.version:
@@ -48,10 +49,10 @@ def main():
         return 0
     
     if options.mode == "b93":
-        board = boards.Befunge93Board(options.width, options.height, options.debug, options.debugdelay)
+        board = boards.Befunge93Board(options.width, options.height, options.debug, options.debugdelay, options.seed)
         board.pointer.x, board.pointer.y = options.x, options.y
     elif options.mode == "cb93":
-        board = boards.ConcurrentBefunge93Board(options.width, options.height, options.debug, options.debugdelay)
+        board = boards.ConcurrentBefunge93Board(options.width, options.height, options.debug, options.debugdelay, options.seed)
         board.pointers[0].x, board.pointers[0].y = options.x, options.y
     else:
         print "Mode not supported"
